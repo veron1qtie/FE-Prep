@@ -8,22 +8,38 @@ export class Node {
 export default class LinkedList {
     constructor() {
         this.head = null;
-        this.tail = null;
-        this.size = 0;
     }
 
-    addNode(val) {
+    addToHead(val) {
         const node = new Node(val);
 
-        if(this.size === 0) {
+        if(this.head === null) {
             this.head = node;
-            this.tail = node;
         }
         else {
-            this.tail.next = node; // adding node 
-            this.tail = node; // reassigning the tail
+            let prevHead = this.head;
+            this.head = node;
+            node.next = prevHead;
         }
-        this.size++;
+        return this.head;
+    }
+
+
+    addToTail(val) {
+        const node = new Node(val);
+
+        if(this.head === null) {
+            this.head = node;
+        }
+        else {
+            let curNode = this.head;
+            while( curNode.next !== null) {
+               curNode = curNode.next;
+            }
+            curNode.next = node;
+        }
+
+        return node;
     }
 
     getFirst() {
@@ -31,8 +47,15 @@ export default class LinkedList {
     }
 
     getLast() {
-        return this.tail;
+        if(this.head === null) return this.head;
+        let curNode = this.head;
+
+        while(curNode.next !== null) {
+            curNode = curNode.next;
+        }
+        return curNode;
     }
+
     // we remove the head and there is no more memory link and garbage collector removes this
     clear() {
         let curHead = this.head;
@@ -43,28 +66,48 @@ export default class LinkedList {
             curHead = next;
         }
         this.head = null;
-        this.tail = null;
-        this.size = 0;
-
-        return this.head; //null
     }
 
     getSize() {
-        return this.size;
+        let size = 0;
+
+        let curNode = this.head;
+
+        while(curNode !== null) {
+            curNode = curNode.next;
+            size++;
+        }
+
+        return size;
+    }
+
+    printVals() {
+        if(this.head === null) return null;
+
+        let curNode = this.head;
+        let values = [];
+
+        while(curNode !== null) {
+            values.push(curNode.data);
+            curNode = curNode.next;
+        }
+        return values;
     }
 }
 
 const ll = new LinkedList();
-ll.addNode('first');
-ll.addNode('second');
-ll.addNode('third');
+ll.addToTail('first');
+ll.addToTail('second');
+ll.addToTail('third');
 
-console.log(ll.getSize());
-console.log(ll.getFirst());
-console.log(ll.getLast());
+console.log('size of LL is', ll.getSize()); //3
+console.log('firstEl of LL is', ll.getFirst()); //first
+console.log('lastEl of LL is', ll.getLast()); //third
+
+console.log(ll.printVals()); //should print all el
 
 ll.clear();
 
-console.log(ll.getSize()); // 0
+console.log('this is new size after clear()', ll.getSize()); // 0
 console.log(ll.getFirst()); // null 
 console.log(ll.getLast()); // null
